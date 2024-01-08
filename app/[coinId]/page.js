@@ -1,24 +1,32 @@
-'use client'
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
 
-function CoinDetail() {
-    const [coin, setCoin] = useState(null);
-
-    return (
-        <div className='coin-detail'>
-            <div className='name-symbol'>
-                <h1 className='name'>coin-name</h1>
-                <h2 className='symbol'>(coin-symbol)</h2>
-            </div>
-            <div className='market-description'>
-                <p className='coin-rank'>Rank: coin-symbol</p>
-                <p className='coin-price'>Price: $coin-price</p>
-                <p className='coin-market-cap'>Market Cap: $coin-market_cap_usd</p>
-                <p className='coin-total-supply'>Total Supply: coin-tsupply</p>
-                <p className='coin-max-supply'>Max Supply: coin-msupply</p>
-            </div>
-        </div>
-    )
+function CoinDetail({ params }) {
+	const [coin, setCoin] = useState({});
+	useEffect(() => {
+		fetch(`https://api.coinlore.net/api/ticker/?id=${params.coinId}`)
+			.then((res) => res.json())
+			.then((data) => setCoin(data[0]));
+	}, []);
+	const { name, price_usd, symbol, rank, market_cap_usd, tsupply, msupply } =
+		coin;
+	return (
+		<div className="coin-detail">
+			<div className="name-symbol">
+				<h1 className="name">{name}</h1>
+				<h2 className="symbol">({symbol})</h2>
+			</div>
+			<div className="market-description">
+				<p className="coin-rank">Rank: {rank}</p>
+				<p className="coin-price">Price: ${price_usd}</p>
+				<p className="coin-market-cap">Market Cap: ${market_cap_usd}</p>
+				<p className="coin-total-supply">Total Supply: {tsupply}</p>
+				<p className="coin-max-supply">
+					Max Supply: {msupply ? msupply : "N/A"}
+				</p>
+			</div>
+		</div>
+	);
 }
 
-export default CoinDetail
+export default CoinDetail;
